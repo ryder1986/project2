@@ -4,7 +4,7 @@
             "alg": {
                 "pvd_c4": {
 			"step":2,
-		"ratio":"0.8",
+            "ratio":"0.8",
                     "detect_area": [
                         {
                             "x": 119,
@@ -24,6 +24,7 @@
                         }
                     ]
                 },
+                "pvd_hog": {},
                 "selected_alg": "pvd_c4"
             },
             "camera_id": 2,
@@ -31,7 +32,7 @@
             "camera_port": 5000,
             "direction": 3,
             "password": "admin",
-            "url": "rtsp://192.168.1.97:554/av0_1",
+            "url": "rtsp://192.168.1.216:8554/test1",
             "user_name": "admin"
         }
     ],

@@ -81,11 +81,11 @@ public:
             players.last()->start();
 
         }
-//        foreach (Player *p, players) {
-//           if( p->wait()){
-//               prt(info,"stop a thread");
-//           }
-//        }
+        //        foreach (Player *p, players) {
+        //           if( p->wait()){
+        //               prt(info,"stop a thread");
+        //           }
+        //        }
 
     }
     void  play_start();
@@ -117,8 +117,12 @@ private slots:
 
         QJsonObject o1;
         o1["detect_area"]=ps;
+        o1["ratio"]="0.8";
+        o1["step"]="9";
 
         obj["pvd_c4"]=o1;
+        QJsonObject o2;
+        obj["pvd_hog"]=o2;
         //   obj
         o["alg"]=obj;
         QJsonDocument doc(o);
