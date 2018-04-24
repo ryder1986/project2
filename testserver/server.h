@@ -140,7 +140,7 @@ public:
     }
 
 public slots:
-    int handle_client_request(QByteArray request,QByteArray &ret,void *addr)
+    int handle_client_request(string request,string &ret,void *addr)
     {
         ClientSession *cs=(ClientSession *)addr;
         DataPacket data_src(request);

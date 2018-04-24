@@ -145,15 +145,16 @@ public slots:
         valid_buf.clear();
         tmp_msg.append(client_buf);
         while(get_valid_buf(tmp_msg,valid_buf)) {//Get valid json object, TODO:we only check {} matches, we should check json grammar
-            QByteArray rt;
+            string rt;
             rt.clear();
             QString str_input(valid_buf);
             prt(info,"get %d bytes:",str_input.length());
             printf("%s\n",str_input.toStdString().data());
-            emit client_request(valid_buf,rt,this);
+            string str=valid_buf.data();
+            emit client_request(str,rt,this);
            // f_client_request(valid_buf,rt,this);
             writes_num=skt->write(rt.data(),rt.size());
-            QString str_output(rt);
+            QString str_output(QByteArray(rt.data(),rt.size()));
             prt(info,"reply %d bytes:",writes_num);
             printf("%s\n",str_output.toStdString().data());
         }
@@ -182,7 +183,7 @@ public slots:
 signals :
     int get_server_config(char *buf);
     void socket_error(ClientSession *c);
-    int client_request(QByteArray request,QByteArray &ret,void *);
+    int client_request(string request,string &ret,void *);
 
 //    void session_operation(int req,void *addr, int len,int cam_index,char *buf,int &ret_size);
 

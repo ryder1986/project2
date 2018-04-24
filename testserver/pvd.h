@@ -51,6 +51,12 @@ public:
         QJsonDocument doc=QJsonDocument::fromJson(data);
         obj=doc.object();
     }
+
+    DataPacket(string data)
+    {
+        QJsonDocument doc=QJsonDocument::fromJson(QByteArray(data.data(),data.size()));
+        obj=doc.object();
+    }
     DataPacket(QJsonObject data)
     {
         obj=data;
@@ -59,10 +65,10 @@ public:
     {
 
     }
-    QByteArray data()
+    string data()
     {
         QJsonDocument doc(obj);
-        return doc.toJson();
+        return doc.toJson().data();
     }
 
     QJsonObject object()

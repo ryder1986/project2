@@ -50,6 +50,19 @@ public:
         }else{
         }
     }
+
+
+    void save(string json_data)
+    {
+        QByteArray ba(json_data.data(),ba.length());
+        save(ba);
+    }
+    void load(string &json_data)
+    {
+        QByteArray ba;
+        load(ba);
+        json_data=ba.data();
+    }
 private:
     QString name;
     QByteArray config;
