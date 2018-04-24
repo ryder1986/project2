@@ -9,6 +9,7 @@
 #include <json/json.h>
 #include <json/value.h>
 using namespace std;
+typedef  QJsonValue JsonValue;
 class Pvd{
 public:
     enum LENGTH_FIXED_VALUE{
@@ -46,66 +47,99 @@ public:
 
 class DataPacket{
 public:
-    DataPacket(QByteArray data)
-    {
-        QJsonDocument doc=QJsonDocument::fromJson(data);
-        obj=doc.object();
-    }
+    //    DataPacket(QByteArray data)
+    //    {
+    //        QJsonDocument doc=QJsonDocument::fromJson(data);
+    //        obj=doc.object();
+    //    }
 
     DataPacket(string data)
     {
         QJsonDocument doc=QJsonDocument::fromJson(QByteArray(data.data(),data.size()));
-        obj=doc.object();
+
+        jv=doc.object();
+
     }
-    DataPacket(QJsonObject data)
-    {
-        obj=data;
-    }
+    //    DataPacket(QJsonObject data)
+    //    {
+    //        obj=data;
+    //    }
     DataPacket()
     {
 
     }
+    DataPacket(JsonValue v)
+    {
+        jv=v;
+    }
     string data()
     {
+        QJsonObject obj=jv.toObject();
         QJsonDocument doc(obj);
         return doc.toJson().data();
     }
 
-    QJsonObject object()
-    {
-        return obj;
-    }
+//    QJsonObject object()
+//    {
+//        return obj;
+//    }
 
     template <typename tp>
     void set_value(QString name,tp value)
     {
+          QJsonObject obj=jv.toObject();
         obj[name]=value;
+        jv=obj;
+
     }
-    string get_str()
+    string get_data()
     {
-        QJsonDocument doc(obj);
+
+        QJsonDocument doc(jv.toObject());
         string str=doc.toJson().data();
         return str;
     }
 
-    QJsonValue get_value(QString name)
+    int get_int(QString name)
     {
-        return obj[name];
+        return get_value(name).toInt();
     }
 
 
+    bool get_bool(QString name)
+    {
+        return get_value(name).toBool();
+    }
+
+
+    string get_string(QString name)
+    {
+        return string(get_value(name).toString().toStdString().data());
+    }
+
+    QJsonValue get_value(QString name)
+    {
+        QJsonObject obj=jv.toObject();
+        return obj[name];
+    }
+    QJsonValue get_value()
+    {
+        return jv;
+    }
 private:
-    QJsonObject obj;
+
+    //  QJsonObject obj;
+    QJsonValue jv;
 };
 using  namespace Json ;
 class JsonPacket{
 public:
     JsonPacket(string json_data)
     {
-         Value v;
-         Reader r;
-         r.parse(json_data,v);
-         val=v;
+        Value v;
+        Reader r;
+        r.parse(json_data,v);
+        val=v;
     }
     template <typename tp>
     void set_value(string name,tp value)

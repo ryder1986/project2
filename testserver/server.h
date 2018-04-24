@@ -320,8 +320,8 @@ public slots:
         ClientSession *client=new ClientSession(skt);
         connect(client,SIGNAL(socket_error(ClientSession*)),this,SLOT(delete_client(ClientSession*)));
         connect(skt,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(displayError(QAbstractSocket::SocketError)));
-        connect(client,SIGNAL( client_request(QByteArray,QByteArray&,void *)),this,
-                SLOT(handle_client_request(QByteArray,QByteArray&,void *)),Qt::DirectConnection);//important,in case of competition bugs
+        connect(client,SIGNAL( client_request(string,string&,void *)),this,
+                SLOT(handle_client_request(string,string&,void *)),Qt::DirectConnection);//important,in case of competition bugs
 //        client->f_client_request=bind(&Server::handle_client_request,this,placeholders::_1,placeholders::_2,placeholders::_3);
         clients.append(client);
     }
@@ -392,7 +392,6 @@ private:
     QJsonValue cfg_2_jv()
     {
         QJsonObject obj;
-        QJsonValue jv;
         DataPacket pkt(obj);
         pkt.set_value("device_name",cfg.server_name);
         pkt.set_value("deviceID",cfg.dev_id);
@@ -401,8 +400,8 @@ private:
         pkt.set_value("ntp_ip",cfg.ntp_ip);
         pkt.set_value("ntp_port",cfg.ntp_port);
         pkt.set_value("cameras",cfg.cams_cfg);
-        jv= pkt.object();
-        return jv;
+
+        return pkt.get_value();
     }
     void jv_2_cfg(QJsonValue jv)
     {

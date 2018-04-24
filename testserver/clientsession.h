@@ -151,7 +151,7 @@ public slots:
             prt(info,"get %d bytes:",str_input.length());
             printf("%s\n",str_input.toStdString().data());
             string str=valid_buf.data();
-            emit client_request(str,rt,this);
+            emit client_request(str,rt,(void *)this);
            // f_client_request(valid_buf,rt,this);
             writes_num=skt->write(rt.data(),rt.size());
             QString str_output(QByteArray(rt.data(),rt.size()));

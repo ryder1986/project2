@@ -52,8 +52,8 @@ public:
         }else
             ret=false;
         r.rects=v;
-        QJsonObject obj;
-        DataPacket pkt(obj);
+
+        DataPacket pkt;
         pkt.set_value("width",r.width);
         pkt.set_value("height",r.height);
         pkt.set_value("back_count",r.back_count);
@@ -72,7 +72,7 @@ public:
             ja.append(obj_rct);
         }
         pkt.set_value("rects",ja);
-        alg_rst=pkt.get_str();
+        alg_rst=pkt.get_data();
         return ret;
     }
 
@@ -196,12 +196,14 @@ void set_config()
     arg.area=area_2_rect();
 }
 
-    void set_config(QJsonValue jv)
+    void set_config(JsonValue jv)
     {
         DataPacket pkt(jv.toObject());
-        arg.scale_ratio= pkt.get_value("ratio").toString().toDouble();
-        arg.scan_step=pkt.get_value("step").toInt();
-        QJsonValue area=pkt.get_value("detect_area");
+        arg.scale_ratio=atof( pkt.get_string("ratio").data());
+
+
+        arg.scan_step=pkt.get_int("step");
+        JsonValue area=pkt.get_value("detect_area");
         arg.area=area_2_rect(area);
     }
     string get_rst()

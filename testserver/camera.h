@@ -153,7 +153,7 @@ private:
         processor=NULL;
     }
 
-    virtual QJsonValue cfg_2_jv()
+    virtual JsonValue cfg_2_jv()
     {
         QJsonObject cfg;
         QJsonValue jv;
@@ -165,14 +165,14 @@ private:
         pkt.set_value("password",cam_cfg.password);
         pkt.set_value("camera_ip",cam_cfg.camera_ip);
         pkt.set_value("camera_port",cam_cfg.camera_port);
-        QJsonObject alg;
-        DataPacket pkt_alg(alg);
+
+        DataPacket pkt_alg;
         pkt_alg.set_value("selected_alg",cam_cfg.alg.selected_alg);
         pkt_alg.set_value("pvd_c4",cam_cfg.alg.pvd_c4);
         pkt_alg.set_value("pvd_hog",cam_cfg.alg.pvd_hog);
-        pkt.set_value("alg",pkt_alg.object());
-        jv= pkt.object();
-        return jv;
+        pkt.set_value("alg",pkt_alg.get_value("alg"));
+
+        return pkt.get_value();
     }
 
     virtual void jv_2_cfg(QJsonValue cfg)
