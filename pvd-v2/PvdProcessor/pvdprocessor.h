@@ -179,6 +179,23 @@ public:
         loaded=false;
         set_config(jv);
     }
+    PvdC4Processor():scanner(HUMAN_height,HUMAN_width,HUMAN_xdiv,HUMAN_ydiv,256,TEST_STEP),VideoProcessor()
+    {
+        loaded=false;
+        set_config();
+
+    }
+
+
+void set_config()
+{
+
+    arg.scale_ratio= 0.8;
+    arg.scan_step=2;
+   // QJsonValue area=pkt.get_value("detect_area");
+    arg.area=area_2_rect();
+}
+
     void set_config(QJsonValue jv)
     {
         DataPacket pkt(jv.toObject());
@@ -238,6 +255,10 @@ public:
     }
 
 private:
+    Rect area_2_rect()
+    {
+  return Rect(0,0,640,480);
+    }
     Rect area_2_rect(QJsonValue area)
     {
         int x_min=10000;

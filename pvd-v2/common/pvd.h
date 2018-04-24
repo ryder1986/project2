@@ -6,6 +6,7 @@
 #include <QJsonDocument>
 #include <QJsonValue>
 #include <QJsonArray>
+//using namespace name;
 class Pvd{
 public:
     enum LENGTH_FIXED_VALUE{
@@ -61,6 +62,8 @@ public:
         QJsonDocument doc(obj);
         return doc.toJson();
     }
+
+
     QJsonObject object()
     {
         return obj;

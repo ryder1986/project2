@@ -30,6 +30,7 @@ class Player : public QThread
        Q_OBJECT
 public:
     Player(QJsonValue cfg){
+        pos=0;
         frame_rate=0;
         jv_2_cfg(cfg);
         src=new VideoSource(cam_cfg.url);
@@ -78,7 +79,30 @@ public:
     {
 
     }
+    void save_rgb(const char* data,int w,int h)
+    {
+        if(pos++<100){
+        QFile f("test.rgb");
 
+        f.open((QIODevice::Append));
+
+        f.write(data,w*h*3);
+        }
+        else{
+            prt(info,"get 100 done");
+        }
+    }
+    void read_rgb(  char* data,int w,int h)
+    {
+        QFile f("test.rgb");
+
+        f.open((QIODevice::ReadOnly));
+        if(pos==30)
+            pos=1;
+           f.seek(w*h*3*pos++);
+       // f.write(data,w*h*3/2);
+        f.read(data,w*h*3);
+    }
 public slots:
     void check_rate()
     {
@@ -93,15 +117,34 @@ private:
     {
         Mat bgr_frame;
         Mat rgb_frame;
-        this->setObjectName("play_thread");
+      //  Mat yuv;
+          this->setObjectName("play_thread");
         while(1){
 
             if(src->get_frame(bgr_frame)){
                 src->get_frame(bgr_frame);
+                //cvtColor(bgr_frame,yuv,CV_BGR2YUV);
+
+
                 cvtColor(bgr_frame,rgb_frame,CV_BGR2RGB);
+
+
+               // save_rgb((const char*)rgb_frame.data,640,480);
+
+     #if    1
                 img1=QImage((const uchar*)(rgb_frame.data),
                             rgb_frame.cols,rgb_frame.rows,
                             QImage::Format_RGB888);
+
+#else
+
+                static char buf[640*480*3];
+                read_rgb(buf,640,480);
+                img1=QImage((const uchar*)buf,
+                            rgb_frame.cols,rgb_frame.rows,
+                            QImage::Format_RGB888);
+
+#endif
                 if(wgt){
                     img1.bits();
                     wgt->set_image(img1);
@@ -146,6 +189,7 @@ private:
 
     VideoSource *src;
     PlayerWidget *wgt;
+    int  pos;
 };
 
 #endif // PLAYER_H

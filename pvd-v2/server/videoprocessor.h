@@ -16,7 +16,7 @@ class VideoProcessor
 
 public:
 
-    QByteArray alg_rst;
+    string alg_rst;
     VideoProcessor()
     {
 
