@@ -96,7 +96,7 @@ public:
         cam_cfg.camera_id=no;
     }
 
-    QJsonValue config()
+    JsonValue config()
     {
         return cfg_2_jv();
     }
@@ -155,9 +155,7 @@ private:
 
     virtual JsonValue cfg_2_jv()
     {
-        QJsonObject cfg;
-        QJsonValue jv;
-        DataPacket pkt(cfg);
+        DataPacket pkt;
         pkt.set_value("url",cam_cfg.url);
         pkt.set_value("direction",cam_cfg.direction);
         pkt.set_value("camera_id",cam_cfg.camera_id);
@@ -170,9 +168,9 @@ private:
         pkt_alg.set_value("selected_alg",cam_cfg.alg.selected_alg);
         pkt_alg.set_value("pvd_c4",cam_cfg.alg.pvd_c4);
         pkt_alg.set_value("pvd_hog",cam_cfg.alg.pvd_hog);
-        pkt.set_value("alg",pkt_alg.get_value("alg"));
+        pkt.set_value("alg",pkt_alg.value());
 
-        return pkt.get_value();
+        return pkt.value();
     }
 
     virtual void jv_2_cfg(QJsonValue cfg)

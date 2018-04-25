@@ -72,7 +72,7 @@ public:
             ja.append(obj_rct);
         }
         pkt.set_value("rects",ja);
-        alg_rst=pkt.get_data();
+        alg_rst=pkt.data();
         return ret;
     }
 

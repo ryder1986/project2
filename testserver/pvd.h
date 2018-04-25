@@ -47,12 +47,6 @@ public:
 
 class DataPacket{
 public:
-    //    DataPacket(QByteArray data)
-    //    {
-    //        QJsonDocument doc=QJsonDocument::fromJson(data);
-    //        obj=doc.object();
-    //    }
-
     DataPacket(string data)
     {
         QJsonDocument doc=QJsonDocument::fromJson(QByteArray(data.data(),data.size()));
@@ -60,10 +54,6 @@ public:
         jv=doc.object();
 
     }
-    //    DataPacket(QJsonObject data)
-    //    {
-    //        obj=data;
-    //    }
     DataPacket()
     {
 
@@ -78,28 +68,14 @@ public:
         QJsonDocument doc(obj);
         return doc.toJson().data();
     }
-
-//    QJsonObject object()
-//    {
-//        return obj;
-//    }
-
     template <typename tp>
     void set_value(QString name,tp value)
     {
-          QJsonObject obj=jv.toObject();
+        QJsonObject obj=jv.toObject();
         obj[name]=value;
         jv=obj;
 
     }
-    string get_data()
-    {
-
-        QJsonDocument doc(jv.toObject());
-        string str=doc.toJson().data();
-        return str;
-    }
-
     int get_int(QString name)
     {
         return get_value(name).toInt();
@@ -117,12 +93,13 @@ public:
         return string(get_value(name).toString().toStdString().data());
     }
 
-    QJsonValue get_value(QString name)
+    JsonValue get_value(QString name)
     {
         QJsonObject obj=jv.toObject();
         return obj[name];
     }
-    QJsonValue get_value()
+
+    JsonValue value()
     {
         return jv;
     }

@@ -123,7 +123,7 @@ class Server:public QObject
         int sig_port;
         QString ntp_ip;
         int ntp_port;
-        QJsonValue cams_cfg;
+        JsonValue cams_cfg;
     }Configture_t;
 public:
 
@@ -192,7 +192,7 @@ public slots:
             cfg_2_obj(cfg);
             data_dst.set_value("config",cfg);
 #else
-            QJsonValue jv=cfg_2_jv();
+            JsonValue jv=cfg_2_jv();
             data_dst.set_value("config",jv.toObject());
 #endif
             break;
@@ -200,7 +200,6 @@ public slots:
 
         case Pvd::SET_CONFIG:
         {
-          //  obj_2_cfg(data_src.get_value("config").toObject());
             jv_2_cfg(data_src.get_value("config"));
             save_cfg();
             camera_manager->restart_cameras(cfg.cams_cfg);
@@ -355,11 +354,9 @@ public slots:
 private:
     void load_cfg()
     {
-        QJsonValue jv;
-        QJsonObject obj;
-        database->load(obj);
-        jv=obj;
-//        obj_2_cfg(obj);
+        string json_data;
+        database->load(json_data);
+        JsonValue jv=DataPacket(json_data).value();
         jv_2_cfg(jv);
     }
 #if 0
@@ -372,24 +369,12 @@ private:
 #else
     void save_cfg()
     {
-//        QJsonObject cfg;
-//        cfg_2_obj(cfg);
-
-        QJsonValue cfg=cfg_2_jv();
-        database->save(cfg.toObject());
+        JsonValue jv=cfg_2_jv();
+        database->save(DataPacket(jv).data());
     }
 #endif
-//    void cfg_2_obj(QJsonObject &obj)
-//    {
-//        obj["device_name"]=cfg.server_name;
-//        obj["deviceID"]=cfg.dev_id;
-//        obj["signal_machine_ip"]=cfg.sig_ip;
-//        obj["signal_machine_port"]=cfg.sig_port;
-//        obj["ntp_ip"]=cfg.ntp_ip;
-//        obj["ntp_port"]=cfg.ntp_port;
-//        obj["cameras"]=cfg.cams_cfg;
-//    }
-    QJsonValue cfg_2_jv()
+
+    JsonValue cfg_2_jv()
     {
         QJsonObject obj;
         DataPacket pkt(obj);
@@ -400,14 +385,11 @@ private:
         pkt.set_value("ntp_ip",cfg.ntp_ip);
         pkt.set_value("ntp_port",cfg.ntp_port);
         pkt.set_value("cameras",cfg.cams_cfg);
-
-        return pkt.get_value();
+        return pkt.value();
     }
-    void jv_2_cfg(QJsonValue jv)
+    void jv_2_cfg(JsonValue jv)
     {
           DataPacket pkt(jv.toObject());
-     //     cfg.server_name=pkt.get_value("device_name",cam_cfg.server_name);
-
           cfg.server_name=pkt.get_value("device_name").toString();
           cfg.dev_id=pkt.get_value("deviceID").toInt();
           cfg.sig_ip=pkt.get_value("signal_machine_ip").toString();
@@ -416,16 +398,6 @@ private:
           cfg.ntp_port=pkt.get_value("ntp_port").toInt();
           cfg.cams_cfg=pkt.get_value("cameras");
     }
-//    void obj_2_cfg(QJsonObject obj)
-//    {
-//        cfg.server_name=obj["device_name"].toString();
-//        cfg.dev_id=obj["deviceID"].toInt();
-//        cfg.sig_ip=obj["signal_machine_ip"].toString();
-//        cfg.sig_port= obj["signal_machine_port"].toInt();
-//        cfg.ntp_ip=obj["ntp_ip"].toString();
-//        cfg.ntp_port=obj["ntp_port"].toInt();
-//        cfg.cams_cfg=obj["cameras"];
-//    }
 
     QTcpServer *server;//server for reply all clients request ,execute client cmds,like add cam,del cam, reconfigure cam,etc..
     FileDatabase *database;//hold config data;

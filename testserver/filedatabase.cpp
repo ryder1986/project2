@@ -1,6 +1,6 @@
 #include "filedatabase.h"
 #include "tool.h"
-FileDatabase::FileDatabase(QString file_name)
+FileDatabase::FileDatabase(string file_name)
 {
     name=file_name;
     config.clear();
@@ -8,7 +8,7 @@ FileDatabase::FileDatabase(QString file_name)
     if(ret){
         //prt(info,"open profile %s ok\ncontent:\n%s",name.toStdString().data(),config.toStdString().data());
     }else{
-        prt(info,"open profile %s fail",name.toStdString().data());
+        prt(info,"open profile %s fail",name.data());
     }
 }
 
