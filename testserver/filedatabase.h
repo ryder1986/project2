@@ -34,14 +34,17 @@ private:
 //        f->close();
 //        return ret;
 //    }
-#if 1
-void save_file(string data)
+#if 0
+bool save_file(string data)
 {
     QFile *f=new QFile(QString(name.data()));
     bool ret = f->open(QIODevice::ReadWrite|QIODevice::Truncate);
     if(!ret){
-        prt(info,"fail to open %s",name.data());
+        prt(info,"fail to write %s",name.data());
         delete f;
+        return false;
+    }else{
+        prt(info,"ok to write %s",name.data());
     }
     QByteArray ba(data.data(),data.size());
     f->write(ba);
@@ -50,11 +53,14 @@ void save_file(string data)
 bool load_file(string &data)
 {
 
-      QFile *f=new QFile(QString(name.data()));
+    QFile *f=new QFile(QString(name.data()));
     bool ret = f->open(QIODevice::ReadOnly);
     if(!ret){
         delete f;
-        return ret;
+        prt(info,"fail to load %s",name.data());
+        return false;
+    }else{
+        prt(info,"ok to load %s",name.data());
     }
     QByteArray ba=f->readAll();
     data.append(ba.data());
@@ -65,7 +71,7 @@ bool load_file(string &data)
 void save_file(const string data)
 {
     FILE *f=fopen(name.data(),"wb");
-    int comp=fwrite(data.data(),data.size(),1,f);
+    int comp=fwrite(data.data(),1,data.size(),f);
     if(comp!=data.size())
         prt(info,"error in saving file");
     fclose(f);
