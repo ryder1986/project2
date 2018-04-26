@@ -68,7 +68,7 @@ unix{
     INCLUDEPATH +="$$ALGPATH/include"
     message(alg  in $$ALGPATH/include)
     LIBS+=-L$$CVPATH/$$CV_PREFIX/lib -lopencv_core -lopencv_highgui \
-       -lopencv_objdetect -lopencv_imgproc -lopencv_ml   -lopencv_video  -lX11
+       -lopencv_objdetect -lopencv_imgproc -lopencv_ml -lopencv_highgui  -lopencv_video  -lX11
 
     QMAKE_LIBS+=-lpthread
 }

@@ -44,7 +44,7 @@ public:
         SERVER_REPORTER_PORT=12348
     };
 };
-
+#if 1
 class DataPacket{
 public:
     DataPacket(string data)
@@ -108,6 +108,7 @@ private:
     //  QJsonObject obj;
     QJsonValue jv;
 };
+#else
 using  namespace Json ;
 class JsonPacket{
 public:
@@ -131,4 +132,5 @@ public:
 private:
     Value val;
 };
+#endif
 #endif // PD_H
