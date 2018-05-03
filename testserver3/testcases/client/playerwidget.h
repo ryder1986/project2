@@ -118,33 +118,47 @@ public:
     }
     void unpack_rst(m_result &rst,QByteArray ba)
     {
-        DataPacket pkt(ba);
-        // QJsonObject obj=pkt.data();
-        //   qDebug()<<"------start pkt--------";
-        //    qDebug()<<ba;
-        //  qDebug()<<"---end pkt----";
-        printf("===>%s<===",ba.data());
-        fflush(NULL);
-        rst.width= pkt.get_value("width").toInt();
-        rst.height= pkt.get_value("height").toInt();
-        rst.exist= pkt.get_value("exist").toInt();
-        rst.count= pkt.get_value("count").toInt();
-        rst.front_count= pkt.get_value("front_count").toInt();
-        rst.back_count= pkt.get_value("back_count").toInt();
-        rst.other_count= pkt.get_value("other_count").toInt();
-        rst.duration= pkt.get_value("duration").toInt();
+    //    rst.rects
+          DataPacket pkt(string(ba.data()));
+          vector <JsonValue> rs=pkt.get_array("rects");
+          foreach (JsonValue v, rs) {
+              DataPacket p(v);
+              int w= p.get_int("width");
+              int h= p.get_int("height");
+              int x= p.get_int("x");
+              int y= p.get_int("y");
+              rst.rects.push_back(Rect(x,y,w,h));
+               }
 
-        QJsonArray rects=pkt.get_value("rects").toArray();
-        foreach (QJsonValue v, rects) {
-            //   QJsonObject rc;
-            DataPacket pkt1(v.toObject());
-            Rect rct1;
-            rct1.x=pkt1.get_value("x").toInt();
-            rct1.y=pkt1.get_value("y").toInt();
-            rct1.width=pkt1.get_value("w").toInt();
-            rct1.height=pkt1.get_value("h").toInt();
-            rst.rects.push_back(rct1);
-        }
+                  rst.width= pkt.get_int("width");
+                  rst.height= pkt.get_int("height");
+
+//        // QJsonObject obj=pkt.data();
+//        //   qDebug()<<"------start pkt--------";
+//        //    qDebug()<<ba;
+//        //  qDebug()<<"---end pkt----";
+//        printf("===>%s<===",ba.data());
+//        fflush(NULL);
+//        rst.width= pkt.get_value("width").toInt();
+//        rst.height= pkt.get_value("height").toInt();
+//        rst.exist= pkt.get_value("exist").toInt();
+//        rst.count= pkt.get_value("count").toInt();
+//        rst.front_count= pkt.get_value("front_count").toInt();
+//        rst.back_count= pkt.get_value("back_count").toInt();
+//        rst.other_count= pkt.get_value("other_count").toInt();
+//        rst.duration= pkt.get_value("duration").toInt();
+
+//        QJsonArray rects=pkt.get_value("rects").toArray();
+//        foreach (QJsonValue v, rects) {
+//            //   QJsonObject rc;
+//            DataPacket pkt1(v.toObject());
+//            Rect rct1;
+//            rct1.x=pkt1.get_value("x").toInt();
+//            rct1.y=pkt1.get_value("y").toInt();
+//            rct1.width=pkt1.get_value("w").toInt();
+//            rct1.height=pkt1.get_value("h").toInt();
+//            rst.rects.push_back(rct1);
+//        }
         // rst.rects
 
     }
@@ -166,6 +180,10 @@ public:
             unpack_rst(rst,data);
             alg_w=rst.width;
             alg_h=rst.height;
+            if(rst.rects.size()){
+                prt(info,"sz %d (%d)",rst.rects.size(),rst.rects[0].x);
+
+            }
             foreach (Rect r, rst.rects) {
                 test->drawRect(QRect(r.x*window_w/alg_w,r.y*window_h/alg_h,r.width*window_w/alg_w,r.height*window_h/alg_h));
             }

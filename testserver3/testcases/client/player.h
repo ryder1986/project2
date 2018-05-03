@@ -32,7 +32,7 @@ public:
     Player(QJsonValue cfg){
         frame_rate=0;
         jv_2_cfg(cfg);
-        src=new VideoSource(cam_cfg.url);
+        src=new VideoSource(string(cam_cfg.url.toUtf8().data()));
         wgt=NULL;
         QTimer *t=new QTimer();
         connect(t,SIGNAL(timeout()),this,SLOT(check_rate()));
