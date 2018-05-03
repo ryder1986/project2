@@ -32,12 +32,8 @@ public:
     virtual  string get_rst()
     {
         string ba;
-            return ba ;
+        return ba ;
     }
-//    virtual  bool real_process( Mat &, m_result &)
-//    {
-//        return false;
-//    }
     virtual void init()
     {
 
