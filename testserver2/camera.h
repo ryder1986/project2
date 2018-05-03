@@ -31,7 +31,7 @@ class Camera : public QThread
         string camera_ip;
         int camera_port;
         alg_t alg;
-    }Configture_t;
+    }Config_t;
     Rect detect_rect;
 public:
     Camera(JsonValue jv):processor(NULL)
@@ -146,7 +146,9 @@ private:
     {
         delete tmr;
         quit=true;
-        this->wait();
+        prt(info,"stoping camera..");
+        this->wait();//TODO, maybe we dont need wait?
+        prt(info," camera %s stoped",this->src->get_url().data());
         delete src;
         delete processor;
         src=NULL;
@@ -208,25 +210,15 @@ protected:
         QByteArray rst;
         while(!quit){
             //   prt(info,"runing %s",cam_cfg.url.toStdString().data());
-            // lock.lock();
             mtx.lock();
             if(src->get_frame(frame)&&frame.cols>0&&frame.rows>0){
                 frame_rate++;
                 // bool ret=process(frame,rst);
                 bool ret=processor->process(frame);
                 send_out(processor->get_rst());
-                //  if(ret){
-                //                if(true){
-                //                    ba.clear();
-                //                    ba.append(rst);
-                //                    //  emit output(ba);
-                //                    send_out(ba);
-                //                }
             }else{
                 //prt(info,"get no frame");
             }
-            //  lock.unlock();
-
             mtx.unlock();
             QThread::msleep(1);
         }
@@ -238,7 +230,6 @@ signals:
 public slots:
     void handle_time_up()
     {
-        // prt(info,"%s framerate:%d,(id:%x)",cam_cfg.url.toStdString().data(),frame_rate,threadid);
         frame_rate=0;
     }
 
@@ -249,9 +240,8 @@ private:
     QTimer *tmr;
     VideoSource *src;
     VideoProcessor *processor;
-    Configture_t cam_cfg;
+    Config_t cam_cfg;
     bool quit;
-    QMutex lock;
     mutex mtx;
 };
 

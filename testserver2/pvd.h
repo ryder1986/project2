@@ -174,7 +174,7 @@ public:
     }
 
 
-    string set_string(QString name,string v)
+    void set_string(QString name,string v)
     {
         QJsonObject obj=jv.toObject();
 
@@ -182,7 +182,7 @@ public:
         jv=obj;
     }
 
-    JsonValue set_value(QString name,JsonValue v)
+    void set_value(QString name,JsonValue v)
     {
         QJsonObject obj=jv.toObject();
 
@@ -270,9 +270,8 @@ public:
     }
 
 
-    string set_string(string name,string v)
+    void set_string(string name,string v)
     {
-
         val[name]=v;
     }
 
